@@ -1,0 +1,60 @@
+// Add other product attributes as needed
+        });
+        async function createProduct(productData) {
+            const product = await Product.create(productData);
+            return product;
+        }
+        async function getProducts(options = {}) {
+            const { limit, offset, where, order } = options;
+        
+            const products = await Product.findAll({
+                limit,
+                offset,
+                where,
+                order
+            });
+        
+            return products;
+        }
+        async function updateProduct(productId, productData) {
+            const product = await Product.findByPk(productId);
+        
+            if (!product) {
+                throw new Error('Product not found');
+            }
+        
+            await product.update(productData);
+            return product;
+        }
+        async function deleteProduct(productId) {
+            const product = await Product.findByPk(productId);
+        
+            if (!product) {
+                throw new Error('Product not found');
+            }
+        
+            await product.destroy();   
+        
+        }
+        // Create a product
+const newProduct = await createProduct({
+    name: 'Awesome Product',
+    description: 'This is a great product.',
+    price: 99.99
+});
+
+// Get all products with pagination, filtering, and sorting
+const products = await getProducts({
+    limit: 10,
+    offset: 20,
+    where: {
+        price: { [Sequelize.Op.gt]: 50 }
+    },
+    order: [['name', 'DESC']]
+});
+
+// Update a product
+const updatedProduct = await updateProduct(newProduct.id, {
+    name: 'Updated Product'
+});
+        
